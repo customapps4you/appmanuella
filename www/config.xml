@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        version   = "1.0.0"
+	    id = "br.com.customapps4you.appmanuella"
+        versionCode="1" 
+	>
+    <name>Manuella Hair Club</name>
+
+    <description>
+        Manuella Hair Club 
+    </description>
+
+    <author>
+        Ricardo Tominaga
+    </author>
+	
+	<icon src="img/57_57.png" gap:platform="ios" width="57" height="57" />
+	<icon src="img/72_72.png" gap:platform="ios" width="72" height="72" />
+	<icon src="img/114_114.png" gap:platform="ios" width="114" height="114" />
+	
+	<gap:splash src="img/320_480.png" gap:platform="ios" width="320" height="480" />
+	<gap:splash src="img/640_960.png" gap:platform="ios" width="640" height="960" />
+	<gap:splash src="img/640_1136.png" gap:platform="ios" width="640" height="1136" />
+	
+	<feature name="http://api.phonegap.com/1.0/storage"/>
+	<feature name="http://api.phonegap.com/1.0/file"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+	
+	<access origin="*" />
+	
+	<gap:plugin name="com.phonegap.plugins.facebookconnect">
+		<param name="APP_ID" value="617568024968036" />
+		<param name="APP_NAME" value="manuellahairclub" />
+	</gap:plugin>
+	
+</widget>

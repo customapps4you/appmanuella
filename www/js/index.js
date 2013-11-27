@@ -1,0 +1,727 @@
+			// UTILS
+			
+			// Show a message for a few secs
+			function showTemporaryMsg(msg,millis){
+				$.mobile.showPageLoadingMsg("e", msg, false);
+				setTimeout(function(){$.mobile.hidePageLoadingMsg();},millis);
+			}
+
+			// Show a message
+			function showMsg(msg){
+				$.mobile.showPageLoadingMsg("e", msg, false);
+				setTimeout(function(){$.mobile.hidePageLoadingMsg();},millis);
+			}
+
+			// Hide a message
+			function hideMsg(){
+				$.mobile.hidePageLoadingMsg();
+			}			
+			
+			// DB info standard: "testdb", "1.0", "testdb", 200000
+			function DB(){
+				return window.openDatabase('testdb', '1.0', 'testdb', 200000);
+			}
+			
+			function blobPrefix(){
+				return 'http://customapps4you.appspot.com/blob?blob-key=';
+			}
+			
+			// calls callback/failback when finished
+			function recreateDB(callback,failback){
+				DB().transaction(populateDB, 
+					function (err){
+						console.log('Error recreateDB: '+err.code+','+err.message); 
+						failback('Error recreateDB: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success recreateDB!'); 
+						callback('Success recreateDB!');
+					}
+				);
+			}
+			
+			// calls callback/failback when finished
+			function softRecreateDB(callback,failback){
+				DB().transaction(softPopulateDB, 
+					function (err){
+						console.log('Error softRecreateDB: '+err.code+','+err.message); 
+						failback('Error softRecreateDB: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success softRecreateDB!'); 
+						callback('Success softRecreateDB!');
+					}
+				);
+			}
+			
+			// calls callback/failback when finished
+			function recreateVIDEOS(callback,failback){
+				DB().transaction(populateVIDEOS, 
+					function (err){
+						console.log('Error recreateVIDEOS: '+err.code+','+err.message); 
+						failback('Error recreateVIDEOS: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success recreateVIDEOS!'); 
+						callback('Success recreateVIDEOS!');
+					}
+				);
+			}
+			
+			// calls callback/failback when finished
+			function recreateIMGS(callback,failback){
+				DB().transaction(populateIMGS, 
+					function (err){
+						console.log('Error recreateIMGS: '+err.code+','+err.message); 
+						failback('Error recreateIMGS: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success recreateIMGS!'); 
+						callback('Success recreateIMGS!');
+					}
+				);
+			}
+			
+			// calls callback/failback when finished
+			function recreatePROFS(callback,failback){
+				DB().transaction(populatePROFS, 
+					function (err){
+						console.log('Error recreatePROFS: '+err.code+','+err.message); 
+						failback('Error recreatePROFS: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success recreatePROFS!'); 
+						callback('Success recreatePROFS!');
+					}
+				);
+			}
+			
+			// drops and creates base tables
+			function populateDB(tx) {
+				populateVIDEOS(tx);
+				populateIMGS(tx);
+				populatePROFS(tx);
+			}
+			
+			// soft populate base tables
+			function softPopulateDB(tx) {
+				tx.executeSql('CREATE TABLE IF NOT EXISTS VIDEOS (id unique, title, video, thumbnail)');
+				tx.executeSql('CREATE TABLE IF NOT EXISTS IMGS (id unique, blobkey, title, description)');
+				tx.executeSql('CREATE TABLE IF NOT EXISTS PROFS (id unique, blobkey, title, description)');
+			}
+			
+			// drops and creates VIDEOS
+			function populateVIDEOS(tx) {
+				tx.executeSql('DROP TABLE IF EXISTS VIDEOS');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS VIDEOS (id unique, title, video, thumbnail)');				
+			}
+			
+			// drops and creates IMGS
+			function populateIMGS(tx) {
+                tx.executeSql('DROP TABLE IF EXISTS IMGS');				
+                tx.executeSql('CREATE TABLE IF NOT EXISTS IMGS (id unique, blobkey, title, description)');				
+			}
+			
+			// drops and creates PROFS
+			function populatePROFS(tx) {
+                tx.executeSql('DROP TABLE IF EXISTS PROFS');				
+                tx.executeSql('CREATE TABLE IF NOT EXISTS PROFS (id unique, blobkey, title, description)');			
+			}
+
+			// get table hash
+			function hashTable(table,callback,failback){
+				DB().transaction(
+					function (tx){
+						tx.executeSql('SELECT id FROM '+table+' ORDER BY id ASC', [], 
+							function (tx,results){
+								// success retrieving ids
+								var len = results.rows.length;
+								var unHash = '';
+								for (var i=0; i<len; i++){
+									unHash += results.rows.item(i).id;
+								}
+								// call callback passing hash		
+								callback(calcMD5(unHash));
+							}, 
+							function (err){
+								console.log('Error querying '+table+' hash: '+err.code+','+err.message); 
+								failback('Error querying '+table+' hash: '+err.code+','+err.message)
+							});	
+					}, 
+					function (err){
+						console.log('Error getting '+table+' hash: '+err.code+','+err.message); 
+						failback('Error getting '+table+' hash: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success getting '+table+' hash!');
+					}
+				);
+			}
+			
+			// get videos list
+			function retrieveVideos(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/listvalidvideos', function(data){
+					var items = data.elems;
+					callback(items);
+				}).fail(failback);
+			}
+			
+			// get imgs list
+			function retrieveImgs(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/listvalidimgs', function(data){
+					var items = data.elems;
+					callback(items);
+				}).fail(failback);
+			}
+			
+			// get profs list
+			function retrieveProfs(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/listvalidprofs', function(data){
+					var items = data.elems;
+					callback(items);
+				}).fail(failback);
+			}
+			
+			// input videos list
+			function inputVideos(items,callback,failback){
+				function inputVideosTx(tx){
+					for(var i=0;i<items.length;i++){
+						var item = items[i];
+						var insertClause = 'INSERT INTO VIDEOS (id, title, video, thumbnail) VALUES ('+item.id+',"'+item.title+'","'+item.video+'","'+item.thumbnail+'")';
+						// debug insert clause
+						console.log(insertClause);
+						tx.executeSql(insertClause);
+					}
+				}
+				DB().transaction(inputVideosTx,
+					function (err){
+						console.log('Error inputVideos: '+err.code+','+err.message); 
+						failback('Error inputVideos: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success inputVideos!'); 
+						callback('Success inputVideos!');
+					}
+				);
+			}
+			
+			// input imgs list
+			function inputImgs(items,callback,failback){
+				function inputImgsTx(tx){
+					for(var i=0;i<items.length;i++){
+						var item = items[i];
+						var insertClause = 'INSERT INTO IMGS (id, blobkey, title, description) VALUES ('+item['blob-id']+',"'+item['blob-key']+'","'+item.title+'","'+item.description+'")';
+						// debug insert clause
+						console.log(insertClause);
+						tx.executeSql(insertClause);
+					}
+				}
+				DB().transaction(inputImgsTx,
+					function (err){
+						console.log('Error inputImgs: '+err.code+','+err.message); 
+						failback('Error inputImgs: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success inputImgs!'); 
+						callback('Success inputImgs!');
+					}
+				);
+			}
+			
+			// input profs list
+			function inputProfs(items,callback,failback){
+				function inputProfsTx(tx){
+					for(var i=0;i<items.length;i++){
+						var item = items[i];
+						var insertClause = 'INSERT INTO PROFS (id, blobkey, title, description) VALUES ('+item['blob-id']+',"'+item['blob-key']+'","'+item.title+'","'+item.description+'")';
+						// debug insert clause
+						console.log(insertClause);
+						tx.executeSql(insertClause);
+					}
+				}
+				DB().transaction(inputProfsTx,
+					function (err){
+						console.log('Error inputProfs: '+err.code+','+err.message); 
+						failback('Error inputProfs: '+err.code+','+err.message);
+					}, 
+					function (suc){
+						console.log('Success inputProfs!'); 
+						callback('Success inputProfs!');
+					}
+				);
+			}
+				
+			// get videos hash
+			function hashVideos(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/hashvideos', function(data){
+					var hash = data.hash;
+					callback(hash);
+				}).fail(failback);
+			}
+			
+			// get imgs hash
+			function hashImgs(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/hashimgs', function(data){
+					var hash = data.hash;
+					callback(hash);
+				}).fail(failback);
+			}
+			
+			// get profs hash
+			function hashProfs(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/hashprofs', function(data){
+					var hash = data.hash;
+					callback(hash);
+				}).fail(failback);
+			}
+			
+			// is necessary to update videos?
+			function isUpdateVideos(callback,failback){
+				hashTable('VIDEOS',function (hash1){
+					hashVideos(function (hash2){
+						console.log('Debug isUpdateVideos hash1: '+hash1+', hash2: '+hash2);
+						callback(hash1!=hash2);
+					},failback);
+				},failback);
+			}
+			
+			// is necessary to update imgs?
+			function isUpdateImgs(callback,failback){
+				hashTable('IMGS',function (hash1){
+					hashImgs(function (hash2){
+						console.log('Debug isUpdateImgs hash1: '+hash1+', hash2: '+hash2);
+						callback(hash1!=hash2);
+					},failback);
+				},failback);
+			}
+			
+			// is necessary to update profs?
+			function isUpdateProfs(callback,failback){
+				hashTable('PROFS',function (hash1){
+					hashProfs(function (hash2){
+						console.log('Debug isUpdateProfs hash1: '+hash1+', hash2: '+hash2);
+						callback(hash1!=hash2);
+					},failback);
+				},failback);
+			}
+			
+			// put imgs on cache
+			function cacheImg(src, imgArray, callback){
+				// debug this method
+				console.log('Caching src: '+src);
+				ImgCache.isCached(src, function(path, success){
+					if(!success){
+						ImgCache.cacheFile(src,function(){
+							if(imgArray.length>0){
+								var newSrc = imgArray.pop();
+								cacheImg(newSrc,imgArray,callback);
+							}else{
+								console.log('Images cached succesfully!');
+								callback('Images cached succesfully!');
+							}
+						});
+					}else{
+						if(imgArray.length>0){
+							var newSrc = imgArray.pop();
+							cacheImg(newSrc,imgArray,callback);
+						}else{
+							console.log('Images cached succesfully!');
+							callback('Images cached succesfully!');
+						}
+					}
+				});
+			}		
+			
+			// video update routine
+			function videoUpdateRoutine(callback,failback){
+				isUpdateVideos(function (updateNeeded){
+					if(updateNeeded){
+						recreateVIDEOS(function(){
+							retrieveVideos(function (items){
+								inputVideos(items,function(){
+									var imgArray = [];
+									// debug items
+									console.log(items);
+									for(var i=0;i<items.length;i++){
+										imgArray.push(items[i].thumbnail);
+									}
+									var firstSrc = imgArray.pop();
+									cacheImg(firstSrc,imgArray,callback);
+								},failback);
+							},failback);
+						},						
+						failback);
+					}else{
+						console.log('Videos are already up-to-date!');
+						callback('Videos are already up-to-date!');
+					}
+				},failback);
+			}
+			
+			// img update routine
+			function imgUpdateRoutine(callback,failback){
+				isUpdateImgs(function (updateNeeded){
+					if(updateNeeded){
+						recreateIMGS(function(){
+							retrieveImgs(function (items){
+								inputImgs(items,function(){
+									var imgArray = [];
+									// debug items
+									console.log(items);
+									for(var i=0;i<items.length;i++){
+										imgArray.push(blobPrefix()+items[i]['blob-key']);
+									}
+									var firstSrc = imgArray.pop();
+									cacheImg(firstSrc,imgArray,callback);
+								},failback);
+							},failback);
+						},						
+						failback);
+					}else{
+						console.log('Imgs are already up-to-date!');
+						callback('Imgs are already up-to-date!');
+					}
+				},failback);
+			}
+			
+			// img prof routine
+			function profUpdateRoutine(callback,failback){
+				isUpdateProfs(function (updateNeeded){
+					if(updateNeeded){
+						recreatePROFS(function(){
+							retrieveProfs(function (items){
+								inputProfs(items,function(){
+									var imgArray = [];
+									// debug items
+									console.log(items);
+									for(var i=0;i<items.length;i++){
+										imgArray.push(blobPrefix()+items[i]['blob-key']);
+									}
+									var firstSrc = imgArray.pop();
+									cacheImg(firstSrc,imgArray,callback);
+								},failback);
+							},failback);
+						},						
+						failback);
+					}else{
+						console.log('Profs are already up-to-date!');
+						callback('Profs are already up-to-date!');
+					}
+				},failback);
+			}
+			
+			// check and update all galeries
+			function updateGaleries(callback,failback){
+				videoUpdateRoutine(function(ve){
+					imgUpdateRoutine(function(ie){
+						profUpdateRoutine(function(pe){
+							console.log('[SUCCESS] All galeries updated!');
+							callback('[SUCCESS] All galeries updated!');
+						}, function(pe){
+							console.log('[FAILURE] '+pe);
+							failback('[FAILURE] '+pe);	
+						});
+					}, function(ie){
+						console.log('[FAILURE] '+ie);
+						failback('[FAILURE] '+ie);
+					});
+				}, function(ve){
+					console.log('[FAILURE] '+ve);
+					failback('[FAILURE] '+ve);
+				});
+			}
+			
+			// force DB and Cache initial state
+			function forceDBandCacheInitialState(callback,failback){
+				recreateDB(function(){
+					// Set cache to show debugging
+					ImgCache.options.debug = true;
+					ImgCache.init(function(){
+						ImgCache.clearCache(function(){
+							console.log('Cache and DB OK!');
+							callback('Cache and DB OK!');
+						}, function(){
+							console.log('Problems with clearing cache!');
+							failback('Problems with clearing cache!');
+						});						
+					}, function(){
+						console.log('Problems with Cache init!');
+						failback('Problems with Cache init!');
+					});										
+				}	
+				, function(e){
+					console.log('Error forceDBandCacheInitialState: '+e);
+					failback('Error forceDBandCacheInitialState: '+e);
+				});	
+			}
+			
+			// soft DB and Cache initial state
+			function softDBandCacheInitialState(callback,failback){
+				softRecreateDB(function(){
+					// Set cache to show debugging
+					ImgCache.options.debug = true;
+					ImgCache.init(function(){
+						console.log('Cache and DB OK!');
+						callback('Cache and DB OK!');						
+					}, function(){
+						console.log('Problems with Cache init!');
+						failback('Problems with Cache init!');
+					});										
+				}	
+				, function(e){
+					console.log('Error softDBandCacheInitialState: '+e);
+					failback('Error softDBandCacheInitialState: '+e);
+				});	
+			}
+			
+			// check if connected to internet
+			function isConnected(){
+				return navigator.network.connection.type != Connection.NONE;
+			}
+			
+			// routine to run on deviceready or on resume or on online or on page transitions to galeries
+			// soft DB and Cache initial state + check connection + update galeries
+			// if there is no connection calls noconnectionback, so that an alert can be shown, otherwise can be silent
+			function regularDBandCacheRoutine(callback,failback,noconnectionback){
+				softDBandCacheInitialState(function(e){
+					if(isConnected()){
+						console.log('Connected! Try to update galeries...');
+						updateGaleries(function(e){
+							console.log(e);
+							callback(e);
+						}, function(e){
+							console.log('Error regularDBandCacheRoutine: '+e);
+							failback('Error regularDBandCacheRoutine: '+e);
+						});
+					}else{
+						noconnectionback('No connection for regularDBandCacheRoutine!');
+					}
+				},function(e){
+					console.log('Error regularDBandCacheRoutine: '+e);
+					failback('Error regularDBandCacheRoutine: '+e);
+				});
+			}
+			
+			// FB app id
+			function getAppID(){
+				return '617568024968036';
+			}
+			
+			// FB init should be ran on deviceready
+			function initFB(){
+				FB.init({ appId: getAppID(), nativeInterface: CDV.FB, useCachedDialogs: false });	
+			}
+			
+			// is user logged in FB?
+			function isLoggedInFB(callback) {
+                FB.getLoginStatus(function(response) {
+                    if (response.status == 'connected') {
+                        callback(true);
+                    } else {
+                        callback(false);
+                    }
+                });
+            }
+			
+			// check if logged in, if not then try to log in, if login fails callback(false)
+			function loginFB(callback) {
+				isLoggedInFB(function(e){
+					if(!e){
+						FB.login(
+							function(response) {
+								if (response.session) {
+									callback(true);
+								} else {
+									callback(false);
+								}								
+							},
+							{ scope: "email,user_checkins,publish_stream" }
+						);
+					}else{
+						callback(true);
+					}
+				});                
+            }
+			
+			// check if logged in, if yes then log out
+			function logoutFB(callback) {
+				isLoggedInFB(function(e){
+					if(e){
+						FB.logout(function(response) {
+							// Hack to effectively log out
+							FB.Auth.setAuthResponse(null, 'unknown');	
+							callback();
+                        });
+					}else{
+						callback();
+					}
+				});	
+			}
+			
+			// get checkin message
+			function checkinMessage(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/checkinmessage', function(data){
+					var checkinmessage = data.checkinmessage;
+					callback(checkinmessage);
+				}).fail(failback);
+			}
+
+			// get checkin place
+			function checkinPlace(callback,failback){
+				$.getJSON('http://customapps4you.appspot.com/json/checkinplace', function(data){
+					var checkinplace = data.checkinplace;
+					callback(checkinplace);
+				}).fail(failback);
+			}			
+			
+			// can user checkin?
+			function canUserCheckin(callback,failback,email){
+				$.getJSON('http://customapps4you.appspot.com/json/cancheckinuser?email='+email, function(data){
+					var cancheckin = data.cancheckin;
+					callback(cancheckin==1);
+				}).fail(failback);
+			}
+			
+			// update checkin count
+			function updateCheckinCount(callback,failback,email){
+				$.getJSON('http://customapps4you.appspot.com/json/checkinuser?email='+email, function(data){
+					var checkins = data.checkins;
+					callback(checkins);
+				}).fail(failback);
+			}
+			
+			// update user
+			function updateUser(callback,failback,email){
+				$.getJSON('http://customapps4you.appspot.com/json/updateuser?email='+email, function(data){
+					var id = data.id;
+					callback(id);
+				}).fail(failback);
+			}
+			
+			// get checkin count
+			function checkinCount(callback,failback,email){
+				$.getJSON('http://customapps4you.appspot.com/json/checkinsuser?email='+email, function(data){
+					var checkins = data.checkins;
+					callback(checkins);
+				}).fail(failback);
+			}
+			
+			// perform checkin post
+			function checkinPost(callback,failback) {
+				checkinMessage(function(msg){
+					var checkinInfos = {};
+					checkinInfos.msg = msg;
+					checkinPlace(function(place){
+						checkinInfos.place = place;
+						// debug checkin infos
+						console.log(checkinInfos);
+						console.log('Try to perform checkin post...');
+						FB.api('/me/feed', 'post', {message: checkinInfos.msg, place: checkinInfos.place}, function(response) {
+							if (response.error) {
+								console.log('Failed to post checkin! '+response.error);
+								failback('Failed to post checkin! '+response.error);
+							} else {
+								console.log('Successful checkin!');
+								callback('Successful checkin!');
+							}		
+						});
+					}, function(){
+						console.log('Failed to get checkinPlace!');
+						failback('Failed to get checkinPlace!');
+					});
+				},function(){
+					console.log('Failed to get checkinMessage!');
+					failback('Failed to get checkinMessage!');			
+				});			    
+			}
+			
+			// get user FB email
+			function getUserFBEmail(callback){
+				FB.api('/me', function(response) {
+					callback(response.email);
+				});
+			}
+			
+			// to be run after log in
+			function updateUserRoutine(callback,failback,noconnectionback){
+				if(isConnected()){
+					isLoggedInFB(function(e){
+							if(e){
+								getUserFBEmail(function(email){
+									updateUser(function(e){
+										callback(email);
+									},function(e){
+										failback('Failed updateUserRoutine: '+e);
+									},email);
+								});
+							}else{
+								console.log('Failed updateUserRoutine: user not logged into FB');
+								failback('Failed updateUserRoutine: user not logged into FB');
+							}
+					});
+				}else{
+					noconnectionback('No internet connection!');
+				}
+			}
+			
+			// checkin routine
+			function checkinRoutine(callback,failback,noconnectionback){
+				if(isConnected()){
+					loginFB(function(isLoggedIn){
+						if(isLoggedIn){
+							console.log('Logged in, lets get the email...');
+							getUserFBEmail(function(email){
+								console.log('Can the user checkin?');
+								canUserCheckin(function(e){
+									console.log('Yes! Lets try to checkin...');
+									checkinPost(function(){
+										console.log('Post succeeded! Lets add one to the user...');
+										updateCheckinCount(function(checkins){
+											console.log('Checkin count updated: '+checkins);
+											callback(checkins);
+										}, function(){
+											console.log('Problems to update checkin count!');
+											failback('Problems to update checkin count!');
+										}										
+										,email);
+									}, function(e){
+										console.log('Failed to post checkin: '+e);
+										failback('Failed to post checkin: '+e);
+									});
+								}, function(e){
+									console.log('No! Has to wait some more time...');
+									failback('Problem with ckeckin!');
+								}, email);
+							});
+						}else{
+							console.log('Impossible to log in to FB!');
+							failback('Impossible to log in to FB!');
+						}
+					});
+				}else{
+					noconnectionback('No internet connection!');
+				}
+			}
+			
+			// checkins routine
+			function checkinsRoutine(callback,failback,noconnectionback){
+				if(isConnected()){
+					loginFB(function(isLoggedIn){
+						if(isLoggedIn){
+							console.log('Logged in, lets get the email...');
+							getUserFBEmail(function(email){
+								checkinCount(function(x){
+									callback(x);
+								}, function(e){
+									failback(e);
+								}, email);
+							});
+						}else{
+							console.log('Impossible to log in to FB!');
+							failback('Impossible to log in to FB!');
+						}
+					});
+				}else{
+					noconnectionback('No internet connection!');
+				}
+			}

@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/> 
+		<link rel="stylesheet" href="css/jquery.mobile-1.2.0-alpha.1.min.css" />
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/jquery.mobile-1.2.0-alpha.1.min.js"></script>
+		<link href="css/index.css" rel="stylesheet" type="text/css"/>
+
+		<style type="text/css">
+		.ui-page.ui-body-c {
+			background: url(img/bg.jpg);
+			background-repeat: no-repeat center center fixed;
+			background-position: center center;
+			background-size: cover;  
+		}
+		</style>
+
+		<title>home</title>
+	</head>
+
+	<body>
+
+		<div id="fb-root"><!-- necessary for fb to work properly--></div>
+
+		<div class="b-content" data-role="page" id="home">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#configurations" data-icon="gear" data-iconpos="notext" class="ui-btn-right">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_derepi">
+					<a href="#agendar"><img src="img/agendar.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_tihuse">
+					<a href="#checkin"> <img src="img/checkin.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_bosoku">
+					<a href="#galeria"> <img src="img/galeria.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_konuvi">
+					<a href="#equipe"> <img src="img/equipe.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_misemo">
+					<a href="#contato"> <img src="img/contato.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_bupupa">
+					<a href="#" id="fb-login-button"> <img src="img/face.png" /></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="b-content" data-role="page" id="agendar">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#configurations" data-icon="gear" data-iconpos="notext" class="ui-btn-right">
+				</a>
+				<a data-role="button" href="#home" data-icon="home" data-iconpos="notext" class="ui-btn-left">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>
+			</div>
+		</div>  
+
+		<div class="b-content" data-role="page" id="checkin">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#configurations" data-icon="gear" data-iconpos="notext" class="ui-btn-right">
+				</a>
+				<a data-role="button" href="#home" data-icon="home" data-iconpos="notext" class="ui-btn-left">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_cowuko">
+					<img src="img/checkin3.png" />
+				</div>
+				<div class="fr-widget fr-img fr_wusero">
+					<img src="img/checkin_fazer.jpg" id="checkin-button" />
+				</div>
+			</div>
+		</div>
+
+		<div class="b-content" data-role="page" id="galeria">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#configurations" data-icon="gear" data-iconpos="notext" class="ui-btn-right">
+				</a>
+				<a data-role="button" href="#home" data-icon="home" data-iconpos="notext" class="ui-btn-left">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="b-content" data-role="page" id="equipe">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#configurations" data-icon="gear" data-iconpos="notext" class="ui-btn-right">
+				</a>
+				<a data-role="button" href="#home" data-icon="home" data-iconpos="notext" class="ui-btn-left">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_derepi">
+					<img src="img/galer_prof.png" />
+				</div>
+				<div class="fr-widget fr-img fr_lovubi">
+					<img src="img/pariquis.png" />
+				</div>
+				<div class="fr-widget fr-img fr_wusero">
+					<img src="img/connext.png" />
+				</div>
+			</div>
+		</div>
+
+		<div class="b-content" data-role="page" id="contato">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#configurations" data-icon="gear" data-iconpos="notext" class="ui-btn-right">
+				</a>
+				<a data-role="button" href="#home" data-icon="home" data-iconpos="notext" class="ui-btn-left">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>
+				<div class="fr-widget fr-img fr_kojelo">
+					<img src="img/contato1.png" />
+				</div>
+				<div class="fr-widget fr-img fr_jadomi">
+					<img src="img/unid1.png" />
+				</div>
+				<div class="fr-widget fr-img fr_wunuca">
+					<img src="img/unid2.png" />
+				</div>
+			</div>
+		</div>
+
+		<div class="b-content" data-role="page" id="configurations">
+			<div data-theme="a" data-role="header" data-position="fixed">
+				<a data-role="button" href="#home" data-icon="home" data-iconpos="notext" class="ui-btn-left">
+				</a>
+			</div>
+			<div data-role="content">
+				<div class="fr-widget fr-img fr_binafi">
+					<a href="#home"><img src="img/logo.png" /></a>
+				</div>	
+
+				<div data-role="fieldcontain">
+					<label for="textinput1" style="color: #C0C0C0;">
+						Email do usuário logado
+					</label>
+					<input id="loggeduser" type="text" disabled="disabled"/>
+				</div>
+
+				<input type="button" data-icon="alert" data-iconpos="left" onclick="doLogout()"  value="Log out"/>
+				
+				<h3 style="color: #C0C0C0;" id="total-checkins">
+					Número de checkins: 0
+				</h3>
+
+			</div>
+		</div>
+
+		<script>
+
+			function updateLoggedUserField(str){
+				$('#loggeduser')[0].value = str;
+			}
+			
+			function updateTotalCheckinsField(str){
+				$('#total-checkins').html(str);
+			}
+		
+			function doLogin(){
+				showMsg('Processo de login iniciado...');
+				loginFB(function(){
+					showTemporaryMsg('Processo de login finalizado!',2500);
+					updateUserRoutine(function(email){
+						updateLoggedUserField(email);
+						// now try to get the number of checkins
+						checkinCount(function(x){
+							updateTotalCheckinsField('Número de checkins: '+x);
+						}, function(e){
+							console.log('Problems with doLogin when getting checkin count!');
+						}, email);
+					},function(e){
+						console.log('Problems with doLogin!');
+					},function(e){
+						console.log('No connection after logging with doLogin!');
+					});
+				});
+			}
+
+			function doLogout(){
+				showMsg('Processo de logout iniciado...');
+				logoutFB(function(){
+					showTemporaryMsg('Processo de logout finalizado!',2500);
+					updateLoggedUserField('');
+					updateTotalCheckinsField('Número de checkins: 0');
+				});
+			}
+
+			function doCheckin(){
+				showMsg('Tentativa de checkin...');
+				checkinRoutine(function(e){
+						showTemporaryMsg('Checkin realizado com sucesso! Você possui '+e+' checkins!',2500);
+						updateTotalCheckinsField('Número de checkins: '+e);
+					},
+					function(e){showTemporaryMsg('Problemas no checkin. Lembre-se que é só 1 por dia!',3000);},
+					function(e){showTemporaryMsg('Problemas na conexão!',2500);});
+			}
+
+			var isLocked = false;
+
+			function initActivities(){
+				if(!isLocked){
+					isLocked = true;
+					regularDBandCacheRoutine(function(e){console.log(e);},
+						function(e){console.log(e);},
+						function(e){console.log(e);});
+					initFB();
+					isLocked = false;
+				}				
+			}
+
+			document.addEventListener('deviceready', function() {
+				$('#fb-login-button').click(function(){
+					doLogin();
+				});
+				$('#checkin-button').click(function(){
+					doCheckin();
+				});
+				initActivities();
+			}, false);
+
+			document.addEventListener('resume', function() {
+				initActivities();
+			}, false);
+
+			document.addEventListener('online', function() {
+				initActivities();
+			}, false);
+
+
+		</script>
+
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/cdv-plugin-fb-connect.js"></script>
+		<script type="text/javascript" src="js/facebook-js-sdk.js"></script>
+		<script type="text/javascript" src="js/hashing.js"></script>
+		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="js/imgcache.js"></script>
+		<script type="text/javascript" src="phonegap.js"></script>
+
+	</body>
+
+</html>
