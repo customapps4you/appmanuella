@@ -697,7 +697,7 @@
 								console.log('Impossible to log in to FB!');
 								failback('Impossible to log in to FB!');
 							}
-						}	
+						});	
 					});
 				}else{
 					noconnectionback('No internet connection!');
