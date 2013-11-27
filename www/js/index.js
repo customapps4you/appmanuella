@@ -666,8 +666,8 @@
 			// checkin routine
 			function checkinRoutine(callback,failback,noconnectionback){
 				if(isConnected()){
-					loginFB(function(){
-						isLoggedInFB(function(isLoggedInFB){
+					loginFB(function(isLoggedIn){
+						//isLoggedInFB(function(isLoggedIn){
 							if(isLoggedIn){
 								console.log('Logged in, lets get the email...');
 								getUserFBEmail(function(email){
@@ -697,7 +697,7 @@
 								console.log('Impossible to log in to FB!');
 								failback('Impossible to log in to FB!');
 							}
-						});	
+						//});	
 					});
 				}else{
 					noconnectionback('No internet connection!');
