@@ -97,7 +97,11 @@
 				<div class="fr-widget fr-img fr_binafi">
 					<a href="#home"><img src="img/logo.png" /></a>
 				</div>
+				<div id="imgs-div">
+					
+				</div>
 			</div>
+						
 		</div>
 
 		<div class="b-content" data-role="page" id="equipe">
@@ -111,14 +115,8 @@
 				<div class="fr-widget fr-img fr_binafi">
 					<a href="#home"><img src="img/logo.png" /></a>
 				</div>
-				<div class="fr-widget fr-img fr_derepi">
-					<img src="img/galer_prof.png" />
-				</div>
-				<div class="fr-widget fr-img fr_lovubi">
-					<img src="img/pariquis.png" />
-				</div>
-				<div class="fr-widget fr-img fr_wusero">
-					<img src="img/connext.png" />
+				<div id="profs-div">
+					
 				</div>
 			</div>
 		</div>
@@ -185,9 +183,9 @@
 			function doLogin(){
 				showMsg('Processo de login iniciado...');
 				loginFB(function(){
-					showTemporaryMsg('Processo de login finalizado!',2500);
 					updateUserRoutine(function(email){
 						updateLoggedUserField(email);
+							showTemporaryMsg('Processo de login finalizado!',2500);
 						// now try to get the number of checkins
 						checkinCount(function(x){
 							updateTotalCheckinsField('Número de checkins: '+x);
@@ -214,19 +212,83 @@
 			function doCheckin(){
 				showMsg('Tentativa de checkin...');
 				checkinRoutine(function(e){
-						showTemporaryMsg('Checkin realizado com sucesso! Você possui '+e+' checkins!',2500);
-						updateTotalCheckinsField('Número de checkins: '+e);
+						if(e<0){
+							showTemporaryMsg('Problemas no checkin. Lembre-se que é só 1 por dia!',3000);
+						}else{
+							showTemporaryMsg('Checkin realizado com sucesso! Você possui '+e+' checkins!',2500);
+							updateTotalCheckinsField('Número de checkins: '+e);
+						}
 					},
 					function(e){showTemporaryMsg('Problemas no checkin. Lembre-se que é só 1 por dia!',3000);},
 					function(e){showTemporaryMsg('Problemas na conexão!',2500);});
+			}			
+
+			function listImgs(){
+				DB().transaction(
+					function (tx){
+						tx.executeSql('SELECT blobkey, title, description FROM IMGS ORDER BY id ASC', [], 
+							function (tx,results){
+								$('#imgs-div').empty();
+								for(var i=0;i<results.rows.length;i++){
+									
+									var blobKey = results.rows.item(i).blobkey;
+									var title = results.rows.item(i).title;
+									var description = results.rows.item(i).description;
+									
+									$('<div><h3>'+title+'</h3></div>').appendTo('#imgs-div');
+									var target = $('<img style="width: 90%;" src="" alt=""/>').appendTo('#imgs-div');
+									$('<div style="width: 90%; border-bottom: black; border-width: 2px;"><h5>'+description+'</h5></div>').appendTo('#imgs-div');
+									
+									ImgCache.useCachedFileWithSource(target, blobPrefix()+blobkey, function(){
+										console.log('Now using local copy');
+									}, function(){
+										console.log('Could not load from cache');
+									});								
+								}
+							}, 
+							function (err){console.log('Error querying PROFS blobkeys: '+err.code+','+err.message)});	
+					}, 
+					function (err){console.log('Error getting PROFS blobkeys: '+err.code+','+err.message);}, 
+					function (suc){console.log('Success getting PROFS blobkeys!');}
+				);
 			}
-
+			
+			function listProfs(){
+				DB().transaction(
+					function (tx){
+						tx.executeSql('SELECT blobkey, title, description FROM PROFS ORDER BY id ASC', [], 
+							function (tx,results){
+								$('#profs-div').empty();
+								for(var i=0;i<results.rows.length;i++){
+									
+									var blobKey = results.rows.item(i).blobkey;
+									var title = results.rows.item(i).title;
+									var description = results.rows.item(i).description;
+									
+									$('<div><h3>'+title+'</h3></div>').appendTo('#profs-div');
+									var target = $('<img style="width: 90%;" src="" alt=""/>').appendTo('#profs-div');
+									$('<div style="width: 90%; border-bottom: black; border-width: 2px;"><h5>'+description+'</h5></div>').appendTo('#profs-div');
+									
+									ImgCache.useCachedFileWithSource(target, blobPrefix()+blobkey, function(){
+										console.log('Now using local copy');
+									}, function(){
+										console.log('Could not load from cache');
+									});								
+								}
+							}, 
+							function (err){console.log('Error querying PROFS blobkeys: '+err.code+','+err.message)});	
+					}, 
+					function (err){console.log('Error getting PROFS blobkeys: '+err.code+','+err.message);}, 
+					function (suc){console.log('Success getting PROFS blobkeys!');}
+				);
+			}
+			
 			var isLocked = false;
-
+			
 			function initActivities(){
 				if(!isLocked){
 					isLocked = true;
-					regularDBandCacheRoutine(function(e){console.log(e);},
+					regularDBandCacheRoutine(function(e){console.log(e); listProfs();},
 						function(e){console.log(e);},
 						function(e){console.log(e);});
 					initFB();

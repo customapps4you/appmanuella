@@ -666,36 +666,38 @@
 			// checkin routine
 			function checkinRoutine(callback,failback,noconnectionback){
 				if(isConnected()){
-					loginFB(function(isLoggedIn){
-						if(isLoggedIn){
-							console.log('Logged in, lets get the email...');
-							getUserFBEmail(function(email){
-								console.log('Can the user checkin?');
-								canUserCheckin(function(e){
-									console.log('Yes! Lets try to checkin...');
-									checkinPost(function(){
-										console.log('Post succeeded! Lets add one to the user...');
-										updateCheckinCount(function(checkins){
-											console.log('Checkin count updated: '+checkins);
-											callback(checkins);
-										}, function(){
-											console.log('Problems to update checkin count!');
-											failback('Problems to update checkin count!');
-										}										
-										,email);
+					loginFB(function(){
+						isLoggedInFB(function(isLoggedInFB){
+							if(isLoggedIn){
+								console.log('Logged in, lets get the email...');
+								getUserFBEmail(function(email){
+									console.log('Can the user checkin?');
+									canUserCheckin(function(e){
+										console.log('Yes! Lets try to checkin...');
+										checkinPost(function(){
+											console.log('Post succeeded! Lets add one to the user...');
+											updateCheckinCount(function(checkins){
+												console.log('Checkin count updated: '+checkins);
+												callback(checkins);
+											}, function(){
+												console.log('Problems to update checkin count!');
+												failback('Problems to update checkin count!');
+											}										
+											,email);
+										}, function(e){
+											console.log('Failed to post checkin: '+e);
+											failback('Failed to post checkin: '+e);
+										});
 									}, function(e){
-										console.log('Failed to post checkin: '+e);
-										failback('Failed to post checkin: '+e);
-									});
-								}, function(e){
-									console.log('No! Has to wait some more time...');
-									failback('Problem with ckeckin!');
-								}, email);
-							});
-						}else{
-							console.log('Impossible to log in to FB!');
-							failback('Impossible to log in to FB!');
-						}
+										console.log('No! Has to wait some more time...');
+										failback('Problem with ckeckin!');
+									}, email);
+								});
+							}else{
+								console.log('Impossible to log in to FB!');
+								failback('Impossible to log in to FB!');
+							}
+						}	
 					});
 				}else{
 					noconnectionback('No internet connection!');
