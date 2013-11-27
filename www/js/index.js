@@ -9,7 +9,6 @@
 			// Show a message
 			function showMsg(msg){
 				$.mobile.showPageLoadingMsg("e", msg, false);
-				setTimeout(function(){$.mobile.hidePageLoadingMsg();},millis);
 			}
 
 			// Hide a message
