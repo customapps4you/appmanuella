@@ -235,21 +235,21 @@
 									var title = results.rows.item(i).title;
 									var description = results.rows.item(i).description;
 									
-									$('<div><h3>'+title+'</h3></div>').appendTo('#imgs-div');
-									var target = $('<img style="width: 90%;" src="" alt=""/>').appendTo('#imgs-div');
-									$('<div style="width: 90%; border-bottom: black; border-width: 2px;"><h5>'+description+'</h5></div>').appendTo('#imgs-div');
+									$('<div><h3 style="color: #C0C0C0;">'+title+'</h3></div>').appendTo('#imgs-div');
+									var target = $('<img style="width: 100%;" src="" alt=""/>').appendTo('#imgs-div');
+									$('<div style="border-bottom: black; border-width: 2px; color: #C0C0C0;"><h5>'+description+'</h5></div>').appendTo('#imgs-div');
 									
-									ImgCache.useCachedFileWithSource(target, blobPrefix()+blobkey, function(){
+									ImgCache.useCachedFileWithSource(target, blobPrefix()+blobKey, function(){
 										console.log('Now using local copy');
 									}, function(){
 										console.log('Could not load from cache');
 									});								
 								}
 							}, 
-							function (err){console.log('Error querying PROFS blobkeys: '+err.code+','+err.message)});	
+							function (err){console.log('Error querying IMGS blobkeys: '+err.code+','+err.message)});	
 					}, 
-					function (err){console.log('Error getting PROFS blobkeys: '+err.code+','+err.message);}, 
-					function (suc){console.log('Success getting PROFS blobkeys!');}
+					function (err){console.log('Error getting IMGS blobkeys: '+err.code+','+err.message);}, 
+					function (suc){console.log('Success getting IMGS blobkeys!');}
 				);
 			}
 			
@@ -265,11 +265,11 @@
 									var title = results.rows.item(i).title;
 									var description = results.rows.item(i).description;
 									
-									$('<div><h3>'+title+'</h3></div>').appendTo('#profs-div');
-									var target = $('<img style="width: 90%;" src="" alt=""/>').appendTo('#profs-div');
-									$('<div style="width: 90%; border-bottom: black; border-width: 2px;"><h5>'+description+'</h5></div>').appendTo('#profs-div');
+									$('<div><h3 style="color: #C0C0C0;">'+title+'</h3></div>').appendTo('#profs-div');
+									var target = $('<img style="width: 100%;" src="" alt=""/>').appendTo('#profs-div');
+									$('<div style="border-bottom: black; border-width: 2px; color: #C0C0C0;"><h5>'+description+'</h5></div>').appendTo('#profs-div');
 									
-									ImgCache.useCachedFileWithSource(target, blobPrefix()+blobkey, function(){
+									ImgCache.useCachedFileWithSource(target, blobPrefix()+blobKey, function(){
 										console.log('Now using local copy');
 									}, function(){
 										console.log('Could not load from cache');
@@ -288,7 +288,7 @@
 			function initActivities(){
 				if(!isLocked){
 					isLocked = true;
-					regularDBandCacheRoutine(function(e){console.log(e); listProfs();},
+					regularDBandCacheRoutine(function(e){console.log(e); listProfs(); listImgs();},
 						function(e){console.log(e);},
 						function(e){console.log(e);});
 					initFB();
